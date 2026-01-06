@@ -51,5 +51,21 @@ def list():
         click.echo(f"{status} {todo['id']}  {todo['text']}")
 
 
+@cli.command()
+@click.argument("todo_id", type=int)
+def done(todo_id):
+    """Mark a todo as done."""
+    todos = load_todos()
+
+    for todo in todos:
+        if todo["id"] == todo_id:
+            todo["done"] = True
+            save_todos(todos)
+            click.echo(f"Completed: {todo['text']}")
+            return
+
+    click.echo(f"Todo {todo_id} not found")
+
+
 if __name__ == "__main__":
     cli()
