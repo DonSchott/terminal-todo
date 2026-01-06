@@ -35,7 +35,7 @@ def add(text):
     next_id = max([t["id"] for t in todos], default=0) + 1
     todos.append({"id": next_id, "text": text, "done": False})
     save_todos(todos)
-    click.echo(f"Added: {text}")
+    click.secho(f"Added: {text}", fg="green")
 
 
 @cli.command()
@@ -45,10 +45,15 @@ def list():
     if not todos:
         click.echo("No todos yet!")
         return
-    
+
     for todo in todos:
-        status = "[x]" if todo["done"] else "[ ]"
-        click.echo(f"{status} {todo['id']}  {todo['text']}")
+        if todo["done"]:
+            status = click.style("[x]", fg="green")
+            text = click.style(f"{todo['id']}  {todo['text']}", fg="green", dim=True)
+        else:
+            status = click.style("[ ]", fg="yellow")
+            text = f"{todo['id']}  {todo['text']}"
+        click.echo(f"{status} {text}")
 
 
 @cli.command()
@@ -61,10 +66,10 @@ def done(todo_id):
         if todo["id"] == todo_id:
             todo["done"] = True
             save_todos(todos)
-            click.echo(f"Completed: {todo['text']}")
+            click.secho(f"Completed: {todo['text']}", fg="green")
             return
 
-    click.echo(f"Todo {todo_id} not found")
+    click.secho(f"Todo {todo_id} not found", fg="red")
 
 
 if __name__ == "__main__":
