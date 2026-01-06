@@ -72,5 +72,22 @@ def done(todo_id):
     click.secho(f"Todo {todo_id} not found", fg="red")
 
 
+@cli.command()
+@click.argument("todo_id", type=int)
+def remove(todo_id):
+    """Remove a todo."""
+    todos = load_todos()
+
+    for i, todo in enumerate(todos):
+        if todo["id"] == todo_id:
+            removed = todos.pop(i)
+            save_todos(todos)
+            click.secho(f"Removed: {removed['text']}", fg="yellow")
+            return
+
+    click.secho(f"Todo {todo_id} not found", fg="red")
+
+
+
 if __name__ == "__main__":
     cli()
